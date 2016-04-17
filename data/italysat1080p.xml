@@ -1,0 +1,41 @@
+<!--suppress XmlUnboundNsPrefix -->
+<wizard>
+		<step id="start">
+			<text value="Do you want to use the skin 1080p as the default skin?\n\nThe skin 1080p may not work or slow down the performance of your %s %s" />
+			<displaytext value="Do you want to use the skin 1080p as the default skin?\n\nThe skin 1080p may not work or slow down the performance of your %s %s" />
+			<list>
+				<listentry caption="No" step="end" />
+				<listentry caption="Yes" step="skins1080install" />
+			</list>
+			<code pos="after">
+if self["list"].index == 0:
+	config.skin.primary_skin.setValue("iDreamy/skin.xml")
+else:
+	config.skin.primary_skin.setValue("iDreamy-FHD/skin.xml")
+config.skin.primary_skin.save()
+			</code>
+		</step>
+		<step id="skins1080install" nextstep="end">
+			<text value="Please wait..." />
+			<displaytext value="Please wait..." />
+			<code>
+self.clearSelectedKeys()
+self.selectKey("OK")
+from os import system, popen
+from Screens.Console import Console
+cmd = "opkg update"
+cmd1 = "opkg install enigma2-plugin-skins-italysat-idreamy-fhd"
+self.session.open(Console, title=_("Skin 1080p Install"), cmdlist=[cmd,cmd1])
+self.markDone()
+self.close()
+			</code>
+		</step>
+	<step id="end">
+		<code>
+from Components.config import configfile
+configfile.save()
+self.markDone()
+self.close()
+		</code>
+	</step>
+</wizard>
